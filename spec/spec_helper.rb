@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'factory_girl'
 require 'fastercsv'
 
 require File.expand_path(
