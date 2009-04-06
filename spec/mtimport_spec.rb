@@ -50,25 +50,25 @@ describe MovableErb::MTImport do
       @mt.body_content[1].should eql(['Body 2','is right here'])
     end
     
-    it "should return a rendered template" do
-      @mt.render!.should eql(<<-EOT
-TITLE: A Title
------
-BODY:
+    
+    it "should render with a template file" do
+      @mt.render_with_template.should eql( 
+      %q{TITLE: A Title
+      -----
+      BODY:
 
-Part of the body
-is right here
+      Part of the body
+      is right here
 
---------
-TITLE: Title 2
------
-BODY:
+      --------
+      TITLE: Title 2
+      -----
+      BODY:
 
-Body 2
-is right here
+      Body 2
+      is right here
 
-EOT
-)
+}.gsub(/^ {2,6}/,'') )
     end
   end
   

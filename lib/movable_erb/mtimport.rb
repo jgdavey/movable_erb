@@ -1,12 +1,15 @@
 module MovableErb
   class MTImport
-    attr_accessor :csv
+    require 'erb'
+    
+    attr_accessor :csv, :template, :body_content
     attr_writer :title_column, :body_column
     
     def initialize(args = {})
       if args[:csv]
         @csv = Csv.new(args[:csv])
       end
+        @template = args[:template] || File.join(File.dirname(__FILE__), 'templates', 'default.erb')
     end
     
     def header_rows
@@ -34,7 +37,7 @@ module MovableErb
     end
 
     def body_content  
-      csv.body.map do |row|
+      @body_content ||= csv.body.map do |row|
         body_column.map do |i|
           row[i]
         end
@@ -49,17 +52,14 @@ module MovableErb
       end
     end
     
-    def render!
+    def render_with_template(template = @template)
       rendered = []
       csv.body.each_with_index do |row, i|
-        rendered << <<-EOT
-TITLE: #{title_content[i].join("\n")}
------
-BODY:
-
-#{body_content[i].join("\n")}
-
-EOT
+        title = title_content[i].join("\n")
+        body = body_content[i].join("\n")
+        erb = File.open(template, "rb").read
+        r = ERB.new(erb, 0, '<>') if erb
+        rendered << r.result(binding)
       end
       rendered.join("--------\n")
     end
