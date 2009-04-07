@@ -1,8 +1,95 @@
 #!/usr/bin/env ruby
+require 'optparse'
+require 'ostruct'
+require 'pp'
 
 require File.expand_path(
     File.join(File.dirname(__FILE__), %w[.. lib movable_erb]))
 
-# Put your code here
+class MovableErbCLI
+  def self.parse(args)
+    # The options specified on the command line will be collected in *options*.
+    # We set default values here.
+    options = OpenStruct.new
+    options.library = []
+    options.inplace = false
+    options.encoding = "utf8"
+    options.transfer_type = :auto
+    options.verbose = false
+
+    opts = OptionParser.new do |opts|
+      opts.banner = "Usage: example.rb [options]"
+
+      opts.separator ""
+      opts.separator "Specific options:"
+
+      # Mandatory argument.
+      opts.on("-r", "--require LIBRARY",
+              "Require the LIBRARY before executing your script") do |lib|
+        options.library << lib
+      end
+
+      # Optional argument; multi-line description.
+      opts.on("-i", "--inplace [EXTENSION]",
+              "Edit ARGV files in place",
+              "  (make backup if EXTENSION supplied)") do |ext|
+        options.inplace = true
+        options.extension = ext || ''
+        options.extension.sub!(/\A\.?(?=.)/, ".")  # Ensure extension begins with dot.
+      end
+
+      # Cast 'delay' argument to a Float.
+      opts.on("--delay N", Float, "Delay N seconds before executing") do |n|
+        options.delay = n
+      end
+
+
+      # Cast to octal integer.
+      opts.on("-F", "--irs [OCTAL]", OptionParser::OctalInteger,
+              "Specify record separator (default \\0)") do |rs|
+        options.record_separator = rs
+      end
+
+      # List of arguments.
+      opts.on("--list x,y,z", Array, "Example 'list' of arguments") do |list|
+        options.list = list
+      end
+
+
+      # Optional argument with keyword completion.
+      opts.on("--type [TYPE]", [:text, :binary, :auto],
+              "Select transfer type (text, binary, auto)") do |t|
+        options.transfer_type = t
+      end
+
+      # Boolean switch.
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+        options.verbose = v
+      end
+
+      opts.separator ""
+      opts.separator "Common options:"
+
+      # No argument, shows at tail.  This will print an options summary.
+      # Try it and see!
+      opts.on_tail("-h", "--help", "Show this message") do
+        puts opts
+        exit
+      end
+
+      # Another typical switch to print the version.
+      opts.on_tail("--version", "Show version") do
+        puts MovableErb::VERSION
+        exit
+      end
+    end
+
+    opts.parse!(args)
+    options
+  end  # parse()
+end
+
+output = MovableErbCLI.parse(ARGV)
+pp output
 
 # EOF
