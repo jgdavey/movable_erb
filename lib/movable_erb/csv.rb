@@ -6,6 +6,7 @@ module MovableErb
     attr_reader :file
     def initialize(args)
       if args[:file]
+        args[:file].gsub!(/^([^\.\/])/,'./\1')
         @file = args[:file]
       end
     end

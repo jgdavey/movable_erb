@@ -13,7 +13,17 @@ describe MovableErb::Csv do
     end
 
     it "should have @file attribute match passed in value" do
-      @csv.file.should eql('example.csv')
+      @csv.file.should eql('./example.csv')
+    end
+    
+    it "should allow files in sub-folders" do
+      @csv = MovableErb::Csv.new({:file => 'subfolder/example.csv'})
+      @csv.file.should eql('./subfolder/example.csv')
+    end
+    
+    it "should recognize the dot as current folder" do
+      @csv = MovableErb::Csv.new({:file => './example.csv'})
+      @csv.file.should eql('./example.csv')
     end
 
   end
