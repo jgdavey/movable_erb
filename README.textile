@@ -12,7 +12,7 @@ h2. FEATURES/PROBLEMS:
 
 h2. SYNOPSIS:
 
-  @movable_erb yourfile.csv@
+  @movable_erb [options] yourfile.csv@
 
 h2. REQUIREMENTS:
 

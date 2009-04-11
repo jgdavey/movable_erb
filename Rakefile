@@ -26,6 +26,7 @@ PROJ.version = MovableErb::VERSION
 PROJ.rubyforge.name = 'movable_erb'
 PROJ.depend_on = 'fastercsv'
 PROJ.gem.dependencies = ['fastercsv']
+PROJ.readme_file = 'README.textile'
 
 PROJ.spec.opts << '--color'
 
