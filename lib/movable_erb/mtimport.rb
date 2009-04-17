@@ -2,67 +2,59 @@ module MovableErb
   class MTImport
     require 'erb'
     
-    attr_accessor :csv, :template, :body_content
-    attr_writer :title_column, :body_column
+    COLUMNNAMES = ['title','body','extended']
+    
+    attr_accessor :csv, :template, :body_content, :extended, :columns
+    attr_writer :title_column
     
     def initialize(args = {})
       if args[:csv]
         @csv = Csv.new(args[:csv])
+        @columns = {:body => nil, :title => nil}
       end
         @template = args[:template] || File.join(File.dirname(__FILE__), 'templates', 'default.erb')
     end
     
     def header_rows
-      if self.csv
+      if @csv
         @csv.header
       else
         raise "No CSV file"
       end
     end
     
-    def title_column
-      tc = []
-      header_rows.each_with_index do |col, i|
-        tc << i if col =~ /title/i
+    def setup_column_nums
+      COLUMNNAMES.each do |colname|
+        @columns[colname.to_sym] = header_rows.to_enum(:each_with_index).collect do |x,i| 
+          i if x.downcase == colname
+        end.compact  
       end
-      tc.empty? ? [0] : tc
-    end
-
-    def body_column
-      tc = []
-      header_rows.each_with_index do |col, i|
-        tc << i if col =~ /body/i
-      end
-      tc.empty? ? [1] : tc
-    end
-
-    def body_content  
-      @body_content ||= csv.body.map do |row|
-        body_column.map do |i|
-          row[i]
-        end
-      end
+      @columns
     end
     
-    def title_content  
-      csv.body.map do |row|
-        title_column.map do |i|
-          row[i]
-        end
+    def column_nums_for(column)
+      @columns[column.to_sym]
+    end
+    
+    def content_for(column, row = 0)
+      column_nums_for(column).map do |i|
+        csv.body[row][i]
       end
     end
+
     
     def render_with_template(template = @template)
       rendered = []
       csv.body.each_with_index do |row, i|
-        title = title_content[i].join("\n")
-        body = body_content[i].join("\n")
+        title = content_for('title', i).join("\n")
+        body = content_for('body', i).join("\n")
         erb = File.open(template, "rb").read
         r = ERB.new(erb, 0, '<>') if erb
-        rendered << r.result(binding)
+        b = binding
+        rendered << r.result(b)
       end
       rendered.join("--------\n")
     end
-
+    
   end
 end
