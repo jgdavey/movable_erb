@@ -21,12 +21,19 @@ task :default => 'spec:run'
 PROJ.name = 'movable_erb'
 PROJ.authors = 'Joshua Davey'
 PROJ.email = 'josh@joshuadavey.com'
+PROJ.summary = 'A simple CSV to MTImport conversion utility'
+PROJ.description = 'Usage: movable_erb [options]'
 PROJ.url = 'http://github.com/jgdavey/movable_erb/'
 PROJ.version = MovableErb::VERSION
 PROJ.rubyforge.name = 'movable_erb'
-PROJ.depend_on = 'fastercsv'
+
 PROJ.gem.dependencies = ['fastercsv']
+
 PROJ.readme_file = 'README.textile'
+PROJ.exclude << %w(\.git ^pkg tmp$)
+
+PROJ.notes.exclude = %w(^README\.txt$ ^data/)
+PROJ.rdoc.exclude = %w(^README\.txt$ ^data/)
 
 PROJ.spec.opts << '--color'
 
