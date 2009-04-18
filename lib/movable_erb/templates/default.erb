@@ -1,14 +1,21 @@
 TITLE: <%= title %>
+<% if category && !category.empty? %>
+CATEGORY: <%= category %>
+<% end %>
+<% if tags && !tags.empty? %>
+TAGS: <%= tags %>
+<% end %>
 -----
 BODY:
 
 <%= body %>
 
 
-<% if extended %>
+<% unless extended.nil? || extended.empty? %>
 -----
 EXTENDED:
 
 <%= extended %>
+
 
 <% end %>

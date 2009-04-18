@@ -2,7 +2,7 @@ module MovableErb
   class MTImport
     require 'erb'
     
-    COLUMNNAMES = ['title','body','extended']
+    COLUMNNAMES = ['title','body','extended', 'category', 'tags']
     
     attr_accessor :csv, :template, :body_content, :extended, :columns
     attr_writer :title_column
@@ -37,7 +37,7 @@ module MovableErb
     end
     
     def content_for(column, row = 0)
-      column_nums_for(column).map do |i|
+      content = column_nums_for(column).map do |i|
         csv.body[row][i]
       end
     end
@@ -46,8 +46,11 @@ module MovableErb
     def render_with_template(template = @template)
       rendered = []
       csv.body.each_with_index do |row, i|
-        title = content_for('title', i).join("\n")
+        title = content_for('title', i).join(" ")
         body = content_for('body', i).join("\n")
+        extended = content_for('extended', i).join("\n")
+        category = content_for('category', i).join(" ")
+        tags = content_for('tags', i).join(", ")
         erb = File.open(template, "rb").read
         r = ERB.new(erb, 0, '<>') if erb
         b = binding

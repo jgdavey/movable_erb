@@ -16,6 +16,7 @@ class MovableErbCLI
     options.encoding = "utf8"
     options.transfer_type = :auto
     options.verbose = false
+    options.file    = ''
 
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: example.rb [options]"
@@ -23,32 +24,15 @@ class MovableErbCLI
       opts.separator ""
       opts.separator "Specific options:"
 
-      # Mandatory argument.
-      opts.on("-r", "--require LIBRARY",
-              "Require the LIBRARY before executing your script") do |lib|
-        options.library << lib
+      opts.on("-f", "--file FILE", "CSV file to parse") do |f|
+        options.file = f
       end
-
-      # Optional argument; multi-line description.
-      opts.on("-i", "--inplace [EXTENSION]",
-              "Edit ARGV files in place",
-              "  (make backup if EXTENSION supplied)") do |ext|
-        options.inplace = true
-        options.extension = ext || ''
-        options.extension.sub!(/\A\.?(?=.)/, ".")  # Ensure extension begins with dot.
-      end
-
+      
       # Cast 'delay' argument to a Float.
       opts.on("--delay N", Float, "Delay N seconds before executing") do |n|
         options.delay = n
       end
 
-
-      # Cast to octal integer.
-      opts.on("-F", "--irs [OCTAL]", OptionParser::OctalInteger,
-              "Specify record separator (default \\0)") do |rs|
-        options.record_separator = rs
-      end
 
       # List of arguments.
       opts.on("--list x,y,z", Array, "Example 'list' of arguments") do |list|
@@ -85,11 +69,18 @@ class MovableErbCLI
     end
 
     opts.parse!(args)
-    options
+    if options.file.nil?
+      puts opts
+      options
+    else
+      pp options
+      mtnew = MovableErb::MTImport.new(:csv => {:file => options.file})
+      return mtnew.render_with_template
+    end
   end  # parse()
 end
 
-output = MovableErbCLI.parse(ARGV)
-pp output
+result = MovableErbCLI.parse(ARGV)
+pp result
 
 # EOF

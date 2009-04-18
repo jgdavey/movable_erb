@@ -80,12 +80,74 @@ describe MovableErb::MTImport do
       @mt = MovableErb::MTImport.new(:csv => {:file => 'spec/fixtures/example.csv'})
       @mt.csv.stub!(:header).and_return(['Title','Body','Category',"Extended"])
       @mt.csv.stub!(:body).and_return([['A Title', 'Part of the body','Articles','Another field'],['Title 2', 'Body 2','Articles','field 2']])
-      
+      @mt.setup_column_nums
     end
 
     it "should recognize an extended field" do
-      @mt.setup_column_nums.should be_instance_of(Hash)
       @mt.columns[:extended].should_not be_nil
+      @mt.columns[:extended].should be_instance_of(Array)
+      @mt.columns[:extended].should eql([3])
+    end
+    
+    it "should recognize the category field" do
+      @mt.columns[:category].should_not be_nil
+      @mt.columns[:category].should be_instance_of(Array)
+      @mt.columns[:category].should eql([2])
+    end
+    
+    it "should correctly render" do
+      @mt.render_with_template.should eql(
+      %q{TITLE: A Title
+      CATEGORY: Articles
+      -----
+      BODY:
+
+      Part of the body
+      
+      -----
+      EXTENDED:
+      
+      Another field
+      
+      --------
+      TITLE: Title 2
+      CATEGORY: Articles
+      -----
+      BODY:
+      
+      Body 2
+      
+      -----
+      EXTENDED:
+      
+      field 2
+      
+      }.gsub(/^ +/,''))
+    end
+  end
+  
+  describe "tags" do
+    before(:each) do
+      @mt = MovableErb::MTImport.new(:csv => {:file => 'spec/fixtures/example.csv'})
+      @mt.csv.stub!(:header).and_return(['Title','Body','Tags'])
+      @mt.csv.stub!(:body).and_return([['A Title', 'Body content','dog, cats, mice']])
+      @mt.setup_column_nums
+    end
+    
+    it "should recognize tags" do
+      @mt.columns[:tags].should_not be_nil
+    end
+    
+    it "should render correctly" do
+      @mt.render_with_template.should eql(
+      %q{TITLE: A Title
+      TAGS: dog, cats, mice
+      -----
+      BODY:
+
+      Body content
+      
+      }.gsub(/^ +/,''))
     end
   end
   
