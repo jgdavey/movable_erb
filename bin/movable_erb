@@ -11,16 +11,16 @@ class MovableErbCLI
     # The options specified on the command line will be collected in *options*.
     # We set default values here.
     options = OpenStruct.new
-    options.library = []
-    options.inplace = false
-    options.encoding = "utf8"
-    options.transfer_type = :auto
-    options.verbose = false
+    options.template = nil
     options.file    = ''
 
     opts = OptionParser.new do |opts|
-      opts.banner = "Usage: example.rb [options]"
-
+      opts.banner = "Usage: movable_erb [options]"
+      
+      opts.separator ""
+      opts.separator "It is often useful to pipe the output from STDOUT to a file"
+      opts.separator "e.g. # movable_erb -f yourfile.csv > import.txt"
+      
       opts.separator ""
       opts.separator "Specific options:"
 
@@ -28,27 +28,8 @@ class MovableErbCLI
         options.file = f
       end
       
-      # Cast 'delay' argument to a Float.
-      opts.on("--delay N", Float, "Delay N seconds before executing") do |n|
-        options.delay = n
-      end
-
-
-      # List of arguments.
-      opts.on("--list x,y,z", Array, "Example 'list' of arguments") do |list|
-        options.list = list
-      end
-
-
-      # Optional argument with keyword completion.
-      opts.on("--type [TYPE]", [:text, :binary, :auto],
-              "Select transfer type (text, binary, auto)") do |t|
-        options.transfer_type = t
-      end
-
-      # Boolean switch.
-      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-        options.verbose = v
+      opts.on("-t", "--template TEMPLATE", "Template to use (default is MTImport)") do |t|
+        options.template = t
       end
 
       opts.separator ""
@@ -69,18 +50,17 @@ class MovableErbCLI
     end
 
     opts.parse!(args)
-    if options.file.nil?
-      puts opts
-      options
+    if options.file == ''
+      opts
     else
-      pp options
-      mtnew = MovableErb::MTImport.new(:csv => {:file => options.file})
-      return mtnew.render_with_template
+      mtnew = MovableErb::MTImport.new(:csv => {:file => options.file,:template => options.template })
+      mtnew.setup_column_nums
+      mtnew.render_with_template
     end
   end  # parse()
 end
 
 result = MovableErbCLI.parse(ARGV)
-pp result
+puts result
 
 # EOF

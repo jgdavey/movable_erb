@@ -22,5 +22,9 @@ module MovableErb
     def data
       rows[1..rows.length]
     end
+    
+    def body
+      data
+    end
   end
 end

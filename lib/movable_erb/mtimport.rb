@@ -4,8 +4,7 @@ module MovableErb
     
     COLUMNNAMES = ['title','body','extended', 'category', 'tags']
     
-    attr_accessor :csv, :template, :body_content, :extended, :columns
-    attr_writer :title_column
+    attr_accessor :csv, :template, :columns
     
     def initialize(args = {})
       if args[:csv]
@@ -27,8 +26,11 @@ module MovableErb
       COLUMNNAMES.each do |colname|
         @columns[colname.to_sym] = header_rows.to_enum(:each_with_index).collect do |x,i| 
           i if x.downcase == colname
-        end.compact  
+        end.compact
       end
+      # Useful defaults
+      @columns[:title] = [0] if @columns[:title].empty?
+      @columns[:body] = [1] if @columns[:body].empty?
       @columns
     end
     

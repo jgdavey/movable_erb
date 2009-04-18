@@ -151,4 +151,23 @@ describe MovableErb::MTImport do
     end
   end
   
+  describe "when header column is not named/misnamed" do
+    before(:each) do
+      @mt = MovableErb::MTImport.new(:csv => {:file => 'spec/fixtures/example.csv'})
+      @mt.csv.stub!(:header).and_return(['Name','Address','Nothing'])
+      @mt.csv.stub!(:body).and_return([['John Boy', '123 Nowhere Lane','dog, cats, mice']])
+      @mt.setup_column_nums
+    end
+    
+    it "should default the first field to title" do
+      @mt.columns[:title].should_not be_nil
+      @mt.columns[:title].should eql([0])
+    end
+    
+    it "should default the second field to body" do
+      @mt.columns[:body].should_not be_nil
+      @mt.columns[:body].should eql([1])
+    end
+  end
+  
 end
