@@ -1,31 +1,5 @@
-h1. Movable Erb
-    by Joshua Davey
-    http://github.com/jgdavey/movable_erb
-
-h2. DESCRIPTION:
-
-A simple CSV to MTImport conversion utility
-
-h2. FEATURES/PROBLEMS:
-
-* Commandline access
-
-h2. SYNOPSIS:
-
-  @movable_erb [options] yourfile.csv@
-
-h2. REQUIREMENTS:
-
-* fastercsv gem
-
-h2. INSTALL:
-
-@sudo gem install movable_erb@
-(PENDING release)
-
-h2. LICENSE:
-
-(The MIT License)
+The MIT License
+---------------
 
 Copyright (c) 2009
 

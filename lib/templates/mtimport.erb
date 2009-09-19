@@ -1,0 +1,22 @@
+TITLE: <%= data['title'].join(', ') if data['title'] %>
+<% if data['author'] %>
+AUTHOR: <%= data['author'].join(', ') %>
+<% end %>
+<% data['category'] && data['category'].each do |cat| %>
+CATEGORY: <%= cat %>
+<% end %>
+-----
+BODY:
+
+<%= data['body'].join("\n") if data['body'] %>
+
+<% if data['extended_body'] %>
+
+-----
+EXTENDED BODY:
+
+<%= data['extended_body'] %>
+
+<% end %>
+
+--------

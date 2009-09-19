@@ -1,66 +1,38 @@
 #!/usr/bin/env ruby
-require 'optparse'
-require 'ostruct'
 require 'pp'
+require 'rubygems'
+require 'trollop'
 
 require File.expand_path(
     File.join(File.dirname(__FILE__), %w[.. lib movable_erb]))
 
-class MovableErbCLI
-  def self.parse(args)
-    # The options specified on the command line will be collected in *options*.
-    # We set default values here.
-    options = OpenStruct.new
-    options.template = nil
-    options.file    = ''
+DEFAULT_TEMPLATE = File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib templates mtimport.erb]))
 
-    opts = OptionParser.new do |opts|
-      opts.banner = "Usage: movable_erb [options]"
-      
-      opts.separator ""
-      opts.separator "It is often useful to pipe the output from STDOUT to a file"
-      opts.separator "e.g. # movable_erb -f yourfile.csv > import.txt"
-      
-      opts.separator ""
-      opts.separator "Specific options:"
-
-      opts.on("-f", "--file FILE", "CSV file to parse") do |f|
-        options.file = f
-      end
-      
-      opts.on("-t", "--template TEMPLATE", "Template to use (default is MTImport)") do |t|
-        options.template = t
-      end
-
-      opts.separator ""
-      opts.separator "Common options:"
-
-      # No argument, shows at tail.  This will print an options summary.
-      # Try it and see!
-      opts.on_tail("-h", "--help", "Show this message") do
-        puts opts
-        exit
-      end
-
-      # Another typical switch to print the version.
-      opts.on_tail("--version", "Show version") do
-        puts MovableErb::VERSION
-        exit
-      end
-    end
-
-    opts.parse!(args)
-    if options.file == ''
-      opts
-    else
-      mtnew = MovableErb::MTImport.new(:csv => {:file => options.file,:template => options.template })
-      mtnew.setup_column_nums
-      mtnew.render_with_template
-    end
-  end  # parse()
+opts = Trollop::options do
+  
+  version "MovableErb v#{MovableErb::VERSION}  (c) 2009 Joshua Davey"
+  banner <<-EOS
+  Usage:
+  
+      movable_erb [options] <filenames.csv>
+  
+  Options:
+  
+  EOS
+  
+  # Options
+  opt :separator, "Separator between records", :default => "", :short => '-s'
+  opt :template, "path to ERB template", :default => DEFAULT_TEMPLATE, :short => '-t'
+  
+  # Show the help screen when no file given
+  educate if ARGV.empty?
+  
+  # Only continue if the CSV file is found
+  Trollop::die "That file could not be found" unless File.exist?(ARGV.first)
 end
 
-result = MovableErbCLI.parse(ARGV)
-puts result
-
-# EOF
+# Paths for CSV files are left in ARGV
+ARGV.each do |csv|
+  opts.merge!(:csv => csv)
+  puts MovableErb.new(opts).convert
+end

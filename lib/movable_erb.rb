@@ -1,49 +1,92 @@
+class MovableErb
+  VERSION = "0.2.0"
+  attr_accessor :csv, :erb, :separator
 
-module MovableErb
+  DEFAULT_TEMPLATE = File.expand_path(File.dirname(__FILE__) + '/templates/mtimport.erb')
 
-  # :stopdoc:
-  VERSION = '0.1.3'
-  LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
-  PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
-  # :startdoc:
-
-  # Returns the version string for the library.
-  #
-  def self.version
-    VERSION
+  def initialize(options = {})
+    @erb = MovableErb::Erb.setup do |erb|
+      erb.template = options[:template] || DEFAULT_TEMPLATE
+    end
+    if options[:csv]
+      @csv = MovableErb::CSV.setup do |csv|
+        csv.filename = options[:csv]
+      end
+    end
+    @separator = options[:separator] || ""
   end
 
-  # Returns the library path for the module. If any arguments are given,
-  # they will be joined to the end of the libray path using
-  # <tt>File.join</tt>.
-  #
-  def self.libpath( *args )
-    args.empty? ? LIBPATH : ::File.join(LIBPATH, args.flatten)
+  def convert
+    @results = []
+    csv.parse!
+    csv.hashes.each do |hash_data|
+      erb.data = hash_data
+      @results << erb.build!
+    end
+    @results.join(separator)
+  end
+end
+
+class MovableErb::CSV
+  require 'fastercsv'
+
+  attr_accessor :filename, :hashes
+
+  def setup(&block)
+    yield self
+    parse! if @filename
+    self
+  end
+  
+  def self.setup
+    csv = self.new
+    yield csv
+    csv.parse!
   end
 
-  # Returns the lpath for the module. If any arguments are given,
-  # they will be joined to the end of the path using
-  # <tt>File.join</tt>.
-  #
-  def self.path( *args )
-    args.empty? ? PATH : ::File.join(PATH, args.flatten)
+  def parse!
+    @hashes = self.to_hashes
+    self
   end
 
-  # Utility method used to require all files ending in .rb that lie in the
-  # directory below this file that has the same name as the filename passed
-  # in. Optionally, a specific _directory_ name can be passed in such that
-  # the _filename_ does not have to be equivalent to the directory.
-  #
-  def self.require_all_libs_relative_to( fname, dir = nil )
-    dir ||= ::File.basename(fname, '.*')
-    search_me = ::File.expand_path(
-        ::File.join(::File.dirname(fname), dir, '**', '*.rb'))
+  def to_hashes
+    array_of_arrays = FasterCSV.read(filename)
+    headers = array_of_arrays.shift
+    headers.each { |h| h.downcase! && h.gsub!(/\s/,"_") } if headers
+    hashes = Array.new(array_of_arrays.length) { Hash.new }
+    array_of_arrays.each_with_index do |row,i|
+      headers.each_with_index do |header, j|
+        unless row[j].nil?
+          hashes[i][header] = [] if hashes[i][header].nil?
+          hashes[i][header] << row[j]
+        end
+      end
+    end
+    hashes
+  end
+end
 
-    Dir.glob(search_me).sort.each {|rb| require rb}
+class MovableErb::Erb
+  require 'erb'
+
+  attr_accessor :template, :parsed_string, :data
+
+  def self.setup
+    erb = self.new
+    yield erb
+    erb
   end
 
-end  # module MovableErb
+  def template=(template_file)
+    @template = File.read template_file
+  end
 
-MovableErb.require_all_libs_relative_to(__FILE__)
+  def setup
+    yield self
+  end
 
-# EOF
+  def build!
+    erb = ERB.new(template, nil, '<>')
+    @parsed_string = erb.result(binding) if erb
+  end
+end
