@@ -27,7 +27,7 @@ opts = Trollop::options do
   educate if ARGV.empty?
 
   # Only continue if the CSV file is found
-  Trollop::die "That file could not be found" unless File.exist?(ARGV.first)
+  Trollop::die "That file could not be found" unless ARGV.first && File.exist?(ARGV.first)
 end
 
 # Paths for CSV files are left in ARGV
