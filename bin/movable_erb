@@ -3,30 +3,29 @@ require 'pp'
 require 'rubygems'
 require 'trollop'
 
-require File.expand_path(
-    File.join(File.dirname(__FILE__), %w[.. lib movable_erb]))
+require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib movable_erb]))
 
 DEFAULT_TEMPLATE = File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib templates mtimport.erb]))
 
 opts = Trollop::options do
-  
+
   version "MovableErb v#{MovableErb::VERSION}  (c) 2009 Joshua Davey"
   banner <<-EOS
   Usage:
-  
-      movable_erb [options] <filenames.csv>
-  
+
+  movable_erb [options] <filenames.csv>
+
   Options:
-  
+
   EOS
-  
+
   # Options
   opt :separator, "Separator between records", :default => "", :short => '-s'
   opt :template, "path to ERB template", :default => DEFAULT_TEMPLATE, :short => '-t'
-  
+
   # Show the help screen when no file given
   educate if ARGV.empty?
-  
+
   # Only continue if the CSV file is found
   Trollop::die "That file could not be found" unless File.exist?(ARGV.first)
 end

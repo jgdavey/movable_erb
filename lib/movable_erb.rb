@@ -37,7 +37,7 @@ class MovableErb::CSV
     parse! if @filename
     self
   end
-  
+
   def self.setup
     csv = self.new
     yield csv
