@@ -13,7 +13,7 @@ opts = Trollop::options do
   banner <<-EOS
   Usage:
 
-  movable_erb [options] <filenames.csv>
+      movable_erb [options] <filenames.csv>
 
   Options:
 

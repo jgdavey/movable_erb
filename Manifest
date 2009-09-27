@@ -11,6 +11,7 @@ features/step_definitions/tmp.csv
 features/support/env.rb
 lib/movable_erb.rb
 lib/templates/mtimport.erb
+movable_erb.gemspec
 spec/csv_spec.rb
 spec/fixtures/advanced.csv
 spec/fixtures/example.csv
