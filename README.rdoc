@@ -1,39 +1,32 @@
-Movable Erb
-===========
+= Movable Erb
 
 by Joshua Davey  
 http://github.com/jgdavey/movable_erb
 
-Description
------------
+== Description
 
 A simple CSV to MTImport conversion utility. 
 Useful for mapping contacts data into individual entries in Movable Type.
 
 MTImport format is simple enough that most blogging platforms can import it, so this utility could ease the pain of moving some older data structure in CSV format into a blog platform.
 
-Requirements
-------------
+== Requirements
 
 * fastercsv gem
 
-Installation
-------------
+== Installation
 
-	[sudo] gem install jgdavey-movable_erb
+  [sudo] gem install jgdavey-movable_erb
 
 
-Usage
------
+== Usage
 
 After installing the gem, just run
 
-	movable_erb [options] yourfile.csv
+  movable_erb [options] yourfile.csv
 
 
-
-The MIT License
----------------
+== The MIT License
 
 Copyright (c) 2009
 

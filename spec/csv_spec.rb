@@ -117,28 +117,7 @@ describe MovableErb::CSV do
       @csv = MovableErb::CSV.new
     end
 
-    it "should setup with a block" do
-      @csv.setup {|csv| false }.should == @csv
-    end
-
-    it "should accept a file argument" do
-      FasterCSV.stubs(:read).returns([])
-      @csv.setup do |csv|
-        csv.filename = "test.csv"
-      end.should == @csv
-    end
-
-    it "should call parse if filename given in block" do
-      @csv.expects(:parse!).returns('')
-      @csv.setup { |csv| csv.filename = "test.csv" }
-    end
-
-    it "should not call parse if filename not given in block" do
-      @csv.expects(:parse!).never
-      @csv.setup { |csv| false }
-    end
-
-    context "shortcut setup class method" do
+   context "shortcut setup class method" do
       before(:each) do
         MovableErb::CSV.any_instance.stubs(:filename).returns("fake")
         FasterCSV.stubs(:read).returns([])
@@ -254,18 +233,6 @@ describe MovableErb::Erb do
       @erb = MovableErb::Erb.new
       @erb.data = {'these' => 'params'}
       @erb.data.should == {'these' => 'params'}
-    end
-  end
-
-  context "setting up with block" do
-    before(:each) do
-      @erb = MovableErb::Erb.new
-    end
-
-    it "should accept a block that yields itself" do
-      @erb.setup do |erb|
-        erb.should == @erb
-      end
     end
   end
 
