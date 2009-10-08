@@ -18,9 +18,34 @@ MTImport format is simple enough that most blogging platforms can import it, so 
 
   [sudo] gem install jgdavey-movable_erb
 
-
 == Usage
 
+MovableErb uses the header names in the first row of 
+the CSV file to map to each of the mtimport’s values: 
+Title, Body, Extended, Category, and Tags.
+
+So, a CSV file that looks like:
+  Title,Body,Extended
+  Title of a Post,Body content (can include html, etc),Extended content
+
+will become:
+  TITLE: Title of a Post
+  -----
+  BODY:
+
+  Body content (can include html, etc)
+
+  -----
+  EXTENDED:
+
+  Extended content
+
+You can even specify more than one header column as Title, Body, etc.,
+and they will be combined into one entity, joined by:
+* a comma for one-line attributes (title, author), or 
+* a newline for multi-line (Body, Extended)
+
+=== Commandline usage
 After installing the gem, just run
 
   movable_erb [options] yourfile.csv

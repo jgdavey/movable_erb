@@ -1,3 +1,5 @@
+# @author Joshua Davey
+# @version 0.2.4
 class MovableErb
   VERSION = "0.2.4"
   attr_accessor :csv, :erb, :separator
