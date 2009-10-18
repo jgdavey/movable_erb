@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'pp'
 require 'rubygems'
-require 'trollop'
+require 'lib/trollop'
 
 require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib movable_erb]))
 
@@ -25,10 +25,10 @@ opts = Trollop::options do
 
   # Show the help screen when no file given
   educate if ARGV.empty?
-
-  # Only continue if the CSV file is found
-  Trollop::die "That file could not be found" unless ARGV.first && File.exist?(ARGV.first)
 end
+
+# Only continue if the CSV file is found
+Trollop::die "That file could not be found" if ARGV.first && !File.exist?(ARGV.first)
 
 # Paths for CSV files are left in ARGV
 ARGV.each do |csv|

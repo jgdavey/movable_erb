@@ -1,7 +1,6 @@
 # @author Joshua Davey
-# @version 0.2.4
 class MovableErb
-  VERSION = "0.2.4"
+  VERSION = File.read(File.join(File.dirname(__FILE__), '..', 'VERSION')).chomp
   attr_accessor :csv, :erb, :separator
 
   DEFAULT_TEMPLATE = File.expand_path(File.dirname(__FILE__) + '/templates/mtimport.erb')
