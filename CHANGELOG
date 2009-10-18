@@ -1,3 +1,5 @@
+v0.2.5 Fixing bug with Commandline that v0.2.1 introduced
+
 v0.2.1 Fixing bug with CLI tool when no filename given
 
 v0.2.0 Complete rework from ground up. Old API is deprecated.

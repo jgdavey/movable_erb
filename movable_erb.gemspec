@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{movable_erb}
-  s.version = "0.2.4"
+  s.version = "0.2.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joshua Davey"]
@@ -33,6 +33,8 @@ Gem::Specification.new do |s|
      "features/support/env.rb",
      "lib/movable_erb.rb",
      "lib/templates/mtimport.erb",
+     "lib/trollop.rb",
+     "movable_erb.gemspec",
      "spec/csv_spec.rb",
      "spec/fixtures/advanced.csv",
      "spec/fixtures/example.csv",
