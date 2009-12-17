@@ -39,7 +39,13 @@ end
 ##
 # Loads a CSV document into an array of hashes
 class MovableErb::CSV
-  require 'fastercsv'
+  if RUBY_VERSION =~ /1.9/
+    require 'csv'
+    @@csv_library = ::CSV
+  else
+    require 'fastercsv'
+    @@csv_library = FasterCSV
+  end
 
   attr_accessor :filename, :hashes
 
@@ -48,11 +54,12 @@ class MovableErb::CSV
   # @yield [csv] a new instance of {MovableErb::CSV}
   # @return [MovableErb::CSV]
   def self.setup(&block)
+    raise "no block given" unless block_given?
     csv = self.new
     yield csv
     csv.parse!
   end
-  
+
   ##
   # Internally calls {#to_hashes}, but returns self
   # @see to_hashes
@@ -61,12 +68,12 @@ class MovableErb::CSV
     @hashes = self.to_hashes
     self
   end
-  
+
   ##
   # Reads the CSV file into an array of hashes
   # @return [Array] an Array of Hashes
   def to_hashes
-    array_of_arrays = FasterCSV.read(filename)
+    array_of_arrays = @@csv_library.read(filename)
     headers = array_of_arrays.shift
     headers.each { |h| h.downcase! && h.gsub!(/\s/,"_") } if headers
     hashes = Array.new(array_of_arrays.length) { Hash.new }
@@ -88,14 +95,14 @@ class MovableErb::Erb
   require 'erb'
 
   attr_accessor :template, :parsed_string, :data
-  
+
   ##
   # Creates a new instance and allow manipulation of it via block.
-  # 
+  #
   # This can be used to initialize and parse quickly.
   #
   # @yield [erb] a new instance of {MovableErb::Erb}
-  # 
+  #
   # @example Create a new instance, setup and build the template
   #   @erb = MovableErb::Erb.setup do |erb|
   #     erb.data = {'hash' => 'of', 'meaningful' => 'values'}
@@ -104,6 +111,7 @@ class MovableErb::Erb
   #   end
   # @return [MovableErb::Erb]
   def self.setup
+    raise "no block given" unless block_given?
     erb = self.new
     yield erb
     erb

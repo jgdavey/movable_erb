@@ -3,6 +3,13 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 TEMPLATE_FIXTURE = File.expand_path(File.dirname(__FILE__) + '/fixtures/template.erb')
 CSV_FIXTURE = File.expand_path(File.dirname(__FILE__) + '/fixtures/example.csv')
 
+
+if RUBY_VERSION =~ /1.9/
+  $csv_library = ::CSV
+else
+  $csv_library = FasterCSV
+end
+
 describe MovableErb do
   it "should have a CSV instance" do
     m = MovableErb.new
@@ -120,7 +127,7 @@ describe MovableErb::CSV do
    context "shortcut setup class method" do
       before(:each) do
         MovableErb::CSV.any_instance.stubs(:filename).returns("fake")
-        FasterCSV.stubs(:read).returns([])
+        $csv_library.stubs(:read).returns([])
       end
 
       it "should create a new instance" do
@@ -153,7 +160,7 @@ describe MovableErb::CSV do
 
   describe "parsing" do
     before(:each) do
-      FasterCSV.stubs(:read).returns([["row1"], ["row2"]])
+      $csv_library.stubs(:read).returns([["row1"], ["row2"]])
       @csv = MovableErb::CSV.new
       @csv.filename = "test.csv"
     end
@@ -169,7 +176,7 @@ describe MovableErb::CSV do
 
     context "#to_hashes" do
       it "should read from file" do
-        FasterCSV.expects(:read).with("test.csv").returns([[]])
+        $csv_library.expects(:read).with("test.csv").returns([[]])
         @csv.to_hashes
       end
 
@@ -178,17 +185,17 @@ describe MovableErb::CSV do
       end
 
       it "should downcase the header row" do
-        FasterCSV.stubs(:read).returns([["Name"],["Billy Bob"]])
+        $csv_library.stubs(:read).returns([["Name"],["Billy Bob"]])
         @csv.to_hashes.should == [{'name' => ['Billy Bob']}]
       end
       
       it "should convert the header row to snake_case" do
-        FasterCSV.stubs(:read).returns([["Extended Body"],["Billy Bob"]])
+        $csv_library.stubs(:read).returns([["Extended Body"],["Billy Bob"]])
         @csv.to_hashes.should == [{'extended_body' => ['Billy Bob']}] 
       end
 
       it "should return an array of hashes (3 rows, 3 columns)" do
-        FasterCSV.stubs(:read).returns([["Name", "Phone", "Email"], 
+        $csv_library.stubs(:read).returns([["Name", "Phone", "Email"], 
         ["John", "773-123-1234", "john@example.com"], 
         ["Abigail", nil, "abby@example.com"], 
         ["Casius", nil, nil]])
@@ -200,12 +207,12 @@ describe MovableErb::CSV do
       end
 
       it "should collect values with the same key" do
-        FasterCSV.stubs(:read).returns([["Name", "Name", "Email"], ["John", "James", "john@example.com"]]) 
+        $csv_library.stubs(:read).returns([["Name", "Name", "Email"], ["John", "James", "john@example.com"]]) 
         @csv.to_hashes.should == [{'name' => ['John', 'James'],'email' => ['john@example.com']}]
       end
 
       it "should collect values with the same key (more than 2)" do
-        FasterCSV.stubs(:read).returns([["Name", "Name", "Name"], ["John", "James", "Jill"]]) 
+        $csv_library.stubs(:read).returns([["Name", "Name", "Name"], ["John", "James", "Jill"]]) 
         @csv.to_hashes.should == [{'name' => ['John', 'James', 'Jill']}]
       end
     end
@@ -278,7 +285,7 @@ describe MovableErb::Erb do
 
     it "should parse a template with data given" do
       @erb.template = TEMPLATE_FIXTURE
-      @erb.data = {'name' => 'Johnny', 'email' => 'john@example.com'}
+      @erb.data = {'name' => ['Johnny'], 'email' => ['john@example.com']}
       @erb.build!
       @erb.parsed_string.should == <<-ERB.gsub(/^\s+/,'')
       Name: Johnny
