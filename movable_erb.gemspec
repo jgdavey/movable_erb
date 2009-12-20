@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{movable_erb}
-  s.version = "0.2.5"
+  s.version = "0.2.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joshua Davey"]
-  s.date = %q{2009-12-13}
+  s.date = %q{2009-12-20}
   s.default_executable = %q{movable_erb}
   s.description = %q{A General-purpose CSV to ERB template formatter. Useful for converting legacy CSV data to an importable blog format.}
   s.email = %q{josh@joshuadavey.com}
