@@ -41,13 +41,14 @@ end
 class MovableErb::CSV
   if RUBY_VERSION =~ /1.9/
     require 'csv'
-    @@csv_library = ::CSV
+    CSV_PARSER = ::CSV
   else
     require 'fastercsv'
-    @@csv_library = FasterCSV
+    CSV_PARSER = FasterCSV
   end
 
   attr_accessor :filename, :hashes
+  attr_reader :headers
 
   ##
   # Initializes and yields a new instance
@@ -73,19 +74,27 @@ class MovableErb::CSV
   # Reads the CSV file into an array of hashes
   # @return [Array] an Array of Hashes
   def to_hashes
-    array_of_arrays = @@csv_library.read(filename)
-    headers = array_of_arrays.shift
-    headers.each { |h| h.downcase! && h.gsub!(/\s/,"_") } if headers
-    hashes = Array.new(array_of_arrays.length) { Hash.new }
-    array_of_arrays.each_with_index do |row,i|
-      headers.each_with_index do |header, j|
-        unless row[j].nil?
-          hashes[i][header] = [] if hashes[i][header].nil?
-          hashes[i][header] << row[j]
-        end
-      end
+    raw_arrays = CSV_PARSER.read(filename)
+    extract_headers!(raw_arrays)
+    raw_arrays.map {|row| to_hash(row) }
+  end
+
+  protected
+
+  def extract_headers!(array)
+    first_row = array.shift
+    first_row.each { |h| h.downcase! && h.gsub!(/\s/,"_") } if first_row
+    @headers = first_row
+  end
+
+  def to_hash(cells)
+    hash = Hash.new
+    headers.each_with_index do |column_name, column_index|
+      next unless cells[column_index]
+      hash[column_name] ||= []
+      hash[column_name] << cells[column_index]
     end
-    hashes
+    hash
   end
 end
 
