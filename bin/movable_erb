@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 require 'pp'
 require 'rubygems'
-require 'lib/trollop'
-
+require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib trollop]))
 require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib movable_erb]))
 
 DEFAULT_TEMPLATE = File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib templates mtimport.erb]))

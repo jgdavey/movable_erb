@@ -2,21 +2,26 @@ TITLE: <%= data['title'].join(', ') if data['title'] %>
 <% if data['author'] %>
 AUTHOR: <%= data['author'].join(', ') %>
 <% end %>
+<% if data['date'] %>
+DATE: <%= DateTime.parse(data['date'].first).strftime("%m/%d/%Y %X") %>
+<% end %>
+<% if data['published'] %>
+PUBLISHED: <%= [0,'0',false,'f'].include?(data['published']) ? "draft" : "published" %>
+<% end %>
 <% data['category'] && data['category'].each do |cat| %>
 CATEGORY: <%= cat %>
 <% end %>
+<% if data['tags'] %>
+TAGS: "<%= data['tags'].first.split.join('","') %>"
+<% end %>
 -----
 BODY:
-
 <%= data['body'].join("\n") if data['body'] %>
 
 <% if data['extended_body'] %>
-
 -----
 EXTENDED BODY:
-
 <%= data['extended_body'] %>
 
 <% end %>
-
 --------

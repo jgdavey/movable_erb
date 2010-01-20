@@ -6,6 +6,6 @@ namespace :spec do
     t.spec_files = FileList['spec']
     t.spec_opts << ["--color"]
     t.rcov = true
-    t.rcov_opts = ['--exclude', 'spec/,tasks/,coverage/,features/,/System/,/Library/']
+    t.rcov_opts = ['--exclude', 'spec/,tasks/,coverage/,features/,/System/,/Library/,lib/trollop.rb']
   end
 end
