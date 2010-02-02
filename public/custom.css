@@ -1,0 +1,69 @@
+.nofloat, button {
+	float:none;
+}
+
+body {
+	background-color: #f0f0f0;
+	color: #bbb;
+}
+
+#header {
+	margin: 3em 0;
+}
+
+h1 {
+	font-size: 5em;
+	font-weight:bold;
+	color: #bbb;
+}
+
+form {
+	padding: 3em;
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+
+p.top {
+	margin-top: 3em;
+}
+
+form label {
+	font-size: 1.4em;
+	color: #aaa;
+}
+
+button {
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #3CBBC7;
+	border-color: #3CBBC7;
+	color: #fff;
+	font-size: 2em;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	text-shadow: 1px 1px 2px #389;
+}
+
+button:hover {
+	color: #3CBBC7;
+	text-shadow: 1px 1px 0px #fff;
+}
+
+#footer {
+	margin-top: 1em;
+	text-shadow: 1px 1px 0 #fff;
+}
+
+#footer a {
+	color: #999;
+	text-decoration:none;
+}
+
+#footer a:hover {
+	color: #777;
+	text-decoration: underline;
+}

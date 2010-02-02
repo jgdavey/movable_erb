@@ -10,7 +10,7 @@ begin
     gemspec.homepage = "http://github.com/jgdavey/movable_erb"
     gemspec.authors = ["Joshua Davey"]
     gemspec.add_dependency('fastercsv', '>= 1.5.0')
-    gemspec.rdoc_options << "--exclude trollop"
+    gemspec.rdoc_options << "--exclude=trollop"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

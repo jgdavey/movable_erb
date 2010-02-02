@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
+$:.unshift File.expand_path(File.dirname(__FILE__) + "/..")
 require 'pp'
 require 'rubygems'
-require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib trollop]))
-require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib movable_erb]))
+require 'lib/trollop'
+require 'lib/movable_erb'
 
 DEFAULT_TEMPLATE = File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib templates mtimport.erb]))
 
@@ -21,9 +22,18 @@ opts = Trollop::options do
   # Options
   opt :separator, "Separator between records", :default => "", :short => '-s'
   opt :template, "path to ERB template", :default => DEFAULT_TEMPLATE, :short => '-t'
+  banner ""
+  opt :server, "Run movable_erb server (requires Sinatra)"
+  opt :port, "Port to run server on", :default => 4567, :short => '-p'
 
   # Show the help screen when no file given
   educate if ARGV.empty?
+end
+
+if opts[:server]
+  require 'sinatra/base'
+  require 'lib/app'
+  Sinatra::Application.run!(:port => opts[:port])
 end
 
 # Only continue if the CSV file is found

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joshua Davey"]
-  s.date = %q{2009-12-20}
+  s.date = %q{2010-02-01}
   s.default_executable = %q{movable_erb}
   s.description = %q{A General-purpose CSV to ERB template formatter. Useful for converting legacy CSV data to an importable blog format.}
   s.email = %q{josh@joshuadavey.com}
@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
      "tasks/rspec.rake"
   ]
   s.homepage = %q{http://github.com/jgdavey/movable_erb}
-  s.rdoc_options = ["--charset=UTF-8"]
+  s.rdoc_options = ["--charset=UTF-8", "--exclude=trollop"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{A General-purpose CSV to ERB template formatter}

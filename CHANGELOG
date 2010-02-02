@@ -1,3 +1,5 @@
+git: commandline --server option to start up a Sinatra app (sinatra gem required)
+
 v0.2.6 Ruby 1.9 compatability and code cleanup
 
 v0.2.5 Fixing bug with Commandline that v0.2.1 introduced
