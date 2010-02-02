@@ -17,24 +17,21 @@ Feature: CSV Conversion
       TITLE: John
       -----
       BODY:
-
       773-123-1234
       john@example.com
-
+      -----
       --------
       TITLE: Abigail
       -----
       BODY:
-
       abby@example.com
-      
+      -----
       --------
       TITLE: Bernard
       -----
       BODY:
-
       903-294-3921
-      
+      -----
       --------
-      
+
       """
