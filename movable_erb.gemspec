@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{movable_erb}
-  s.version = "0.2.6"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joshua Davey"]
@@ -19,29 +19,36 @@ Gem::Specification.new do |s|
      "README.rdoc"
   ]
   s.files = [
-    ".gitignore",
+    ".gems",
+     ".gitignore",
      "CHANGELOG",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
      "VERSION",
      "bin/movable_erb",
+     "config.ru",
      "cucumber.yml",
      "features/csv.feature",
      "features/step_definitions/csv_steps.rb",
      "features/step_definitions/tmp.csv",
      "features/support/env.rb",
+     "lib/app.rb",
      "lib/movable_erb.rb",
      "lib/templates/mtimport.erb",
      "lib/trollop.rb",
      "movable_erb.gemspec",
+     "public/blueprint.css",
+     "public/custom.css",
      "spec/csv_spec.rb",
      "spec/fixtures/advanced.csv",
      "spec/fixtures/example.csv",
      "spec/fixtures/template.erb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
-     "tasks/rspec.rake"
+     "tasks/rspec.rake",
+     "views/index.erb",
+     "views/layout.erb"
   ]
   s.homepage = %q{http://github.com/jgdavey/movable_erb}
   s.rdoc_options = ["--charset=UTF-8", "--exclude=trollop"]
