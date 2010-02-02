@@ -1,4 +1,6 @@
-TITLE: <%= data['title'].join(', ') if data['title'] %>
+<% if data['title'] %>
+TITLE: <%= data['title'].join(', ') %>
+<% end %>
 <% if data['author'] %>
 AUTHOR: <%= data['author'].join(', ') %>
 <% end %>
@@ -6,7 +8,7 @@ AUTHOR: <%= data['author'].join(', ') %>
 DATE: <%= DateTime.parse(data['date'].first).strftime("%m/%d/%Y %X") %>
 <% end %>
 <% if data['published'] %>
-PUBLISHED: <%= [0,'0',false,'f'].include?(data['published']) ? "draft" : "published" %>
+STATUS: <%= [0,'0',false,'f'].include?(data['published'].first) ? "draft" : "published" %>
 <% end %>
 <% data['category'] && data['category'].each do |cat| %>
 CATEGORY: <%= cat %>
@@ -18,10 +20,11 @@ TAGS: "<%= data['tags'].first.split.join('","') %>"
 BODY:
 <%= data['body'].join("\n") if data['body'] %>
 
-<% if data['extended_body'] %>
 -----
+<% if data['extended_body'] %>
 EXTENDED BODY:
 <%= data['extended_body'] %>
 
+-----
 <% end %>
 --------
