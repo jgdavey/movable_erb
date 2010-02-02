@@ -30,7 +30,7 @@ describe MovableErb do
       @m = MovableErb.new
     end
     it "should raise an error if it's missing a CSV and/or Erb instance" do
-      lambda { @m.convert }.should raise_error 
+      lambda { @m.convert }.should raise_error
     end
 
     it "should raise an error if it's CSV instance can't parse!" do
@@ -77,15 +77,15 @@ describe MovableErb do
 
     it "should set the csv file" do
       m = MovableErb.new({ :csv => CSV_FIXTURE })
-      m.csv.filename.should == CSV_FIXTURE 
+      m.csv.filename.should == CSV_FIXTURE
     end
-    
+
     it "should set a separator if given" do
       m = MovableErb.new({ :separator  => ', ' })
       m.separator.should == ', '
     end
   end
-  
+
   context "full-on run-through" do
     it "should work!" do
       movable_erb = MovableErb.new({
@@ -98,16 +98,14 @@ describe MovableErb do
         CATEGORY: Blah
         -----
         BODY:
-        
         This is the content for hambone
-        
+        -----
         --------
         TITLE: WillyNilly
         -----
         BODY:
-        
         More body
-        
+        -----
         --------
       ERB
     end
@@ -188,16 +186,16 @@ describe MovableErb::CSV do
         CSV_PARSER.stubs(:read).returns([["Name"],["Billy Bob"]])
         @csv.to_hashes.should == [{'name' => ['Billy Bob']}]
       end
-      
+
       it "should convert the header row to snake_case" do
         CSV_PARSER.stubs(:read).returns([["Extended Body"],["Billy Bob"]])
-        @csv.to_hashes.should == [{'extended_body' => ['Billy Bob']}] 
+        @csv.to_hashes.should == [{'extended_body' => ['Billy Bob']}]
       end
 
       it "should return an array of hashes (3 rows, 3 columns)" do
-        CSV_PARSER.stubs(:read).returns([["Name", "Phone", "Email"], 
-        ["John", "773-123-1234", "john@example.com"], 
-        ["Abigail", nil, "abby@example.com"], 
+        CSV_PARSER.stubs(:read).returns([["Name", "Phone", "Email"],
+        ["John", "773-123-1234", "john@example.com"],
+        ["Abigail", nil, "abby@example.com"],
         ["Casius", nil, nil]])
         @csv.to_hashes.should == [
           {'name' => ['John'],    'phone' => ['773-123-1234'], 'email' => ['john@example.com'] },
@@ -207,12 +205,12 @@ describe MovableErb::CSV do
       end
 
       it "should collect values with the same key" do
-        CSV_PARSER.stubs(:read).returns([["Name", "Name", "Email"], ["John", "James", "john@example.com"]]) 
+        CSV_PARSER.stubs(:read).returns([["Name", "Name", "Email"], ["John", "James", "john@example.com"]])
         @csv.to_hashes.should == [{'name' => ['John', 'James'],'email' => ['john@example.com']}]
       end
 
       it "should collect values with the same key (more than 2)" do
-        CSV_PARSER.stubs(:read).returns([["Name", "Name", "Name"], ["John", "James", "Jill"]]) 
+        CSV_PARSER.stubs(:read).returns([["Name", "Name", "Name"], ["John", "James", "Jill"]])
         @csv.to_hashes.should == [{'name' => ['John', 'James', 'Jill']}]
       end
     end
