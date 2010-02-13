@@ -83,7 +83,7 @@ class MovableErb::CSV
 
   def extract_headers!(array)
     first_row = array.shift
-    first_row.each { |h| h.downcase! && h.gsub!(/\s/,"_") } if first_row
+    first_row.each { |h| h && h.downcase! && h.gsub!(/\s/,"_") } if first_row
     @headers = first_row
   end
 
